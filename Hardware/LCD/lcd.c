@@ -736,10 +736,8 @@ void PutChinese(uint16_t Xpos, uint16_t Ypos, uint8_t *str, uint8_t mode)
 {
     uint8_t i, j;
     uint8_t buffer[32];
-    uint16_t tmp_char = 0;
-#ifdef SONG_TYPEFACE                                                                    
+    uint16_t tmp_char = 0;                                                                
     GetGBKCode(buffer, str); /* 取字模数据 */
-#endif
     for (i = 0;i < 16;i++) {
         tmp_char = buffer[i * 2];
         tmp_char = (tmp_char << 8);
