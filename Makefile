@@ -158,6 +158,7 @@ C_INCLUDES =  \
 -IHardware/FATFS/Target \
 -IHardware/FATFS/App \
 -IHardware/LCD \
+-IHardware/FLASH \
 -IHardware/E53_IA1 \
 -IHardware/E53_IS1 \
 -IHardware/E53_SC2 \
