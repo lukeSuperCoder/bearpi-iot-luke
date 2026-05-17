@@ -1,0 +1,5 @@
+# Build output
+build/
+
+# Config backup
+.config.old
