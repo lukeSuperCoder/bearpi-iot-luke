@@ -14,7 +14,9 @@
 #include "font.h"
 #include "spi.h"
 // #include "gpio.h"
+#ifdef USE_HZLIB
 #include <HzLib.h>
+#endif
 // #include "stm32l4xx_hal.h"
 #define LCD_TOTAL_BUF_SIZE    (240*240*2)
 #define LCD_Buf_Size 1152
@@ -732,6 +734,7 @@ void LCD_Init(void)
  * 举例  ：PutChinese21(200,100,"好",0,0);
  * 注意     ：如果输入大于1的汉字字符串，显示将会截断，只显示最前面一个汉字
  *********************************************************/
+#ifdef USE_HZLIB
 void PutChinese(uint16_t Xpos, uint16_t Ypos, uint8_t *str, uint8_t mode)
 {
     uint8_t i, j;
@@ -787,4 +790,5 @@ void PutChinese_strings(uint16_t Xpos, uint16_t Ypos, uint8_t *str, uint8_t mode
         Tmp_y += 16;
     }
 }
+#endif /* USE_HZLIB */
 

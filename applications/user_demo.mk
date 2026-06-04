@@ -50,8 +50,12 @@
 		user_demo_src  = applications/A11_basic_sdio_sdmmc1/main.c 
 	endif
 
-	ifeq ($(CONFIG_A12_BASIC_SDIO_SDMMC1_FATFS), y)		
-		user_demo_src  = applications/A12_basic_sdio_sdmmc1_fatfs/main.c 
+	ifeq ($(CONFIG_A12_BASIC_SDIO_SDMMC1_FATFS), y)
+		user_demo_src  = applications/A12_basic_sdio_sdmmc1_fatfs/main.c
+	endif
+
+	ifeq ($(CONFIG_A13_BASIC_EMOJI_LCD), y)
+		user_demo_src  = applications/A13_basic_emoji_lcd/main.c applications/A13_basic_emoji_lcd/emoji_data.c
 	endif
 
 	ifeq ($(CONFIG_B1_E53_SC1_PLS), y)		

@@ -2,18 +2,7 @@
 /**
   ******************************************************************************
   * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2022 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
+  * @brief          : A13 Emoji LCD Demo - display and switch emoji with KEY1/KEY2
   ******************************************************************************
   */
 /* USER CODE END Header */
@@ -34,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 #include "LCD.h"
 #include "stdio.h"
+#include "emoji_data.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,6 +33,10 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define EMOJI_X     ((240 - EMOJI_WIDTH) / 2)
+#define EMOJI_Y     ((240 - EMOJI_HEIGHT) / 2)
+#define LABEL_Y     (EMOJI_Y + EMOJI_HEIGHT + 8)
+#define DEBOUNCE_MS 20
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -53,7 +47,9 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+static uint8_t current_emoji = 0;
+static uint8_t prev_key1 = GPIO_PIN_SET;
+static uint8_t prev_key2 = GPIO_PIN_SET;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -65,6 +61,19 @@ void PeriphCommonClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+static void display_emoji(uint8_t index)
+{
+    char buf[32];
+
+    LCD_Clear(BLACK);
+    LCD_Show_Image(EMOJI_X, EMOJI_Y, EMOJI_WIDTH, EMOJI_HEIGHT, emoji_table[index]);
+
+    POINT_COLOR = WHITE;
+    BACK_COLOR = BLACK;
+    snprintf(buf, sizeof(buf), "%d/%d %s", index + 1, EMOJI_COUNT, emoji_names[index]);
+    LCD_ShowString(40, LABEL_Y, 160, 16, 16, buf);
+}
 
 /* USER CODE END 0 */
 
@@ -116,7 +125,8 @@ int main(void)
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
   LCD_Init();
-  printf("Welcome to BearPi\r\n");
+  printf("A13 Emoji LCD Demo\r\n");
+  display_emoji(current_emoji);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -125,24 +135,38 @@ int main(void)
   {
     /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
-    LCD_Clear(BLACK);//ÇåÆÁÎªºÚÉ«
-    LCD_ShowString(5, 10, 240, 32, 32, "BearPi LCDTest");//ÏÔÊ¾×Ö·û´®£¬×ÖÌå´óÐ¡32*32
-    LCD_ShowString(10, 50, 240, 16, 16, "Welcome to BearPi!");//ÏÔÊ¾×Ö·û´®£¬×ÖÌå´óÐ¡16*16
-    LCD_ShowString(10, 50+24, 240, 24, 24, "to BearPi!");//ÏÔÊ¾×Ö·û´®£¬×ÖÌå´óÐ¡24*24
-    LCD_ShowString(10, 50+24+32, 240, 32, 32, "BearPi!");//ÏÔÊ¾×Ö·û´®£¬×ÖÌå´óÐ¡32*32
-    // PutChinese_strings(10,150,"Chinese text disabled - HzLib too large for internal Flash",0);»¶Ó­À´µ½Ð¡ÐÜÅÉ¿ªÔ´ÉçÇø",0);	
-    printf("»¶Ó­À´µ½Ð¡ÐÜÅÉ¿ªÔ´ÉçÇø\r\n");
-    HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,GPIO_PIN_SET);//µãÁÁLEDµÆ
-    HAL_Delay(1000);//ÑÓÊ±1Ãë
-    LCD_Clear(BLUE);//ÇåÆÁÎªÀ¶É«
-    LCD_Draw_Circle(120, 120, 100);//»­Ô² °ë¾¶r=100
-    LCD_Draw_Circle(120, 120, 80);//»­Ô² °ë¾¶r=80
-    LCD_Draw_Circle(120, 120, 60);//»­Ô² °ë¾¶r=60
-    LCD_Draw_Circle(120, 120, 40);//»­Ô² °ë¾¶r=40
-    LCD_Draw_Circle(120, 120, 20);//»­Ô² °ë¾¶r=20
-    LCD_Draw_Circle(120, 120, 1);//»­Ô² °ë¾¶r=1
-    HAL_GPIO_WritePin(LED_GPIO_Port,LED_Pin,GPIO_PIN_RESET);//Ï¨ÃðLEDµÆ
-    HAL_Delay(1000);//ÑÓÊ±1Ãë
+    uint8_t key1 = HAL_GPIO_ReadPin(KEY1_GPIO_Port, KEY1_Pin);
+    uint8_t key2 = HAL_GPIO_ReadPin(KEY2_GPIO_Port, KEY2_Pin);
+
+    /* KEY1: next emoji */
+    if (key1 == GPIO_PIN_RESET && prev_key1 == GPIO_PIN_SET)
+    {
+        HAL_Delay(DEBOUNCE_MS);
+        if (HAL_GPIO_ReadPin(KEY1_GPIO_Port, KEY1_Pin) == GPIO_PIN_RESET)
+        {
+            current_emoji = (current_emoji + 1) % EMOJI_COUNT;
+            display_emoji(current_emoji);
+            printf("KEY1 -> %s\r\n", emoji_names[current_emoji]);
+            while (HAL_GPIO_ReadPin(KEY1_GPIO_Port, KEY1_Pin) == GPIO_PIN_RESET);
+        }
+    }
+    prev_key1 = key1;
+
+    /* KEY2: previous emoji */
+    if (key2 == GPIO_PIN_RESET && prev_key2 == GPIO_PIN_SET)
+    {
+        HAL_Delay(DEBOUNCE_MS);
+        if (HAL_GPIO_ReadPin(KEY2_GPIO_Port, KEY2_Pin) == GPIO_PIN_RESET)
+        {
+            current_emoji = (current_emoji == 0) ? (EMOJI_COUNT - 1) : (current_emoji - 1);
+            display_emoji(current_emoji);
+            printf("KEY2 -> %s\r\n", emoji_names[current_emoji]);
+            while (HAL_GPIO_ReadPin(KEY2_GPIO_Port, KEY2_Pin) == GPIO_PIN_RESET);
+        }
+    }
+    prev_key2 = key2;
+
+    HAL_Delay(10);
   }
   /* USER CODE END 3 */
 }
@@ -243,7 +267,6 @@ void PeriphCommonClock_Config(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
   while (1)
   {
@@ -267,5 +290,3 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

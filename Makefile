@@ -50,19 +50,6 @@ Core/Src/spi.c \
 Core/Src/tim.c \
 Core/Src/stm32l4xx_it.c \
 Core/Src/stm32l4xx_hal_msp.c \
-Hardware/FATFS/Target/bsp_driver_sd.c \
-Hardware/FATFS/Target/sd_diskio.c \
-Hardware/FATFS/App/fatfs.c \
-Hardware/LCD/HzLib.c \
-Hardware/LCD/lcd.c \
-Hardware/FLASH/flash.c\
-Hardware/QSPI_FLASH/hal_qspi_flash.c \
-Hardware/E53_SC1/E53_SC1.c \
-Hardware/E53_SC2/E53_SC2.c \
-Hardware/E53_IS1/E53_IS1.c \
-Hardware/E53_IA1/E53_IA1.c \
-Hardware/E53_SF1/E53_SF1.c \
-Hardware/E53_ST1/E53_ST1.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_adc.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_adc_ex.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c \
@@ -92,12 +79,58 @@ Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_spi_ex.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_tim_ex.c \
-Core/Src/system_stm32l4xx.c \
+Core/Src/system_stm32l4xx.c
+
+# --- Conditional hardware modules ---
+
+# LCD (A8, B1-B6)
+USE_LCD := $(or $(CONFIG_A8_BASIC_SPI_LCD),$(CONFIG_A13_BASIC_EMOJI_LCD),$(CONFIG_B1_E53_SC1_PLS),$(CONFIG_B2_E53_IA1_TEMP_HUMI_PLS),$(CONFIG_B3_E53_SF1_SMOKE),$(CONFIG_B4_E53_SC2_AXIS),$(CONFIG_B5_E53_ST1_GPS),$(CONFIG_B6_E53_IS1_INFRARED))
+ifneq ($(USE_LCD),)
+C_SOURCES += Hardware/LCD/lcd.c
+endif
+
+# Internal Flash (A9)
+ifeq ($(CONFIG_A9_BASIC_FLASH), y)
+C_SOURCES += Hardware/FLASH/flash.c
+endif
+
+# QSPI external Flash (A10)
+ifeq ($(CONFIG_A10_BASIC_QSPI_W25Q64), y)
+C_SOURCES += Hardware/QSPI_FLASH/hal_qspi_flash.c
+endif
+
+# FatFs (A12 only)
+ifeq ($(CONFIG_A12_BASIC_SDIO_SDMMC1_FATFS), y)
+C_SOURCES += \
+Hardware/FATFS/Target/bsp_driver_sd.c \
+Hardware/FATFS/Target/sd_diskio.c \
+Hardware/FATFS/App/fatfs.c \
 Middlewares/Third_Party/FatFs/src/diskio.c \
 Middlewares/Third_Party/FatFs/src/ff.c \
 Middlewares/Third_Party/FatFs/src/ff_gen_drv.c \
 Middlewares/Third_Party/FatFs/src/option/cc936.c \
-Middlewares/Third_Party/FatFs/src/option/syscall.c  
+Middlewares/Third_Party/FatFs/src/option/syscall.c
+endif
+
+# E53 sensor drivers
+ifeq ($(CONFIG_B1_E53_SC1_PLS), y)
+C_SOURCES += Hardware/E53_SC1/E53_SC1.c
+endif
+ifeq ($(CONFIG_B2_E53_IA1_TEMP_HUMI_PLS), y)
+C_SOURCES += Hardware/E53_IA1/E53_IA1.c
+endif
+ifeq ($(CONFIG_B3_E53_SF1_SMOKE), y)
+C_SOURCES += Hardware/E53_SF1/E53_SF1.c
+endif
+ifeq ($(CONFIG_B4_E53_SC2_AXIS), y)
+C_SOURCES += Hardware/E53_SC2/E53_SC2.c
+endif
+ifeq ($(CONFIG_B5_E53_ST1_GPS), y)
+C_SOURCES += Hardware/E53_ST1/E53_ST1.c
+endif
+ifeq ($(CONFIG_B6_E53_IS1_INFRARED), y)
+C_SOURCES += Hardware/E53_IS1/E53_IS1.c
+endif
 
 # ASM sources
 ASM_SOURCES =  \

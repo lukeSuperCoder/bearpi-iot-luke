@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Face Emoji Preview - 78 emojis</title>
+<style>
+  body { font-family: -apple-system, "Segoe UI", Roboto, sans-serif; max-width: 1100px; margin: 0 auto; padding: 20px; background: #1a1a2e; color: #eee; }
+  h1 { text-align: center; color: #fff; }
+  .info { text-align: center; color: #aaa; margin-bottom: 20px; font-size: 14px; }
+  .search-box { display: block; width: 100%; max-width: 400px; margin: 0 auto 24px; padding: 10px 16px; font-size: 16px; border: 2px solid #333; border-radius: 8px; background: #16213e; color: #fff; outline: none; }
+  .search-box:focus { border-color: #1da1f2; }
+  .stats { text-align: center; margin-bottom: 16px; color: #1da1f2; font-size: 13px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+  .card { background: #16213e; border-radius: 10px; padding: 12px; display: flex; align-items: center; gap: 10px; border: 1px solid #0f3460; cursor: pointer; transition: all 0.2s; }
+  .card:hover { background: #0f3460; border-color: #1da1f2; transform: translateY(-1px); }
+  .card img { width: 52px; height: 52px; flex-shrink: 0; }
+  .card .idx { font-size: 10px; color: #555; font-weight: bold; }
+  .card .name { font-weight: 600; font-size: 12px; color: #ddd; }
+  .card .file { font-family: monospace; font-size: 10px; color: #1da1f2; margin-top: 2px; }
+</style>
+</head>
+<body>
+<h1>Face Emojis (78)</h1>
+<p class="info">Twemoji 14.0 Face & Expression emojis | Click card to copy filename</p>
+<input type="text" class="search-box" id="search" placeholder="Search name or index..." oninput="filter()" />
+<div class="stats" id="stats">Showing 78 emojis</div>
+<div class="grid" id="grid">
+<div class="card" data-name="grinning face" onclick="copy('00_grinning.png')">
+    <img src="../tools/emoji_png_faces/00_grinning.png" alt="Grinning Face" loading="lazy" />
+    <div>
+      <div class="idx">#00</div>
+      <div class="name">Grinning Face</div>
+      <div class="file">00_grinning.png</div>
+    </div>
+  </div>
+<div class="card" data-name="beaming face" onclick="copy('01_beaming.png')">
+    <img src="../tools/emoji_png_faces/01_beaming.png" alt="Beaming Face" loading="lazy" />
+    <div>
+      <div class="idx">#01</div>
+      <div class="name">Beaming Face</div>
+      <div class="file">01_beaming.png</div>
+    </div>
+  </div>
+<div class="card" data-name="face with tears of joy" onclick="copy('02_tears_of_joy.png')">
+    <img src="../tools/emoji_png_faces/02_tears_of_joy.png" alt="Face with Tears of Joy" loading="lazy" />
+    <div>
+      <div class="idx">#02</div>
+      <div class="name">Face with Tears of Joy</div>
+      <div class="file">02_tears_of_joy.png</div>
+    </div>
+  </div>
+<div class="card" data-name="smiling with open eyes" onclick="copy('03_smiling_open.png')">
+    <img src="../tools/emoji_png_faces/03_smiling_open.png" alt="Smiling with Open Eyes" loading="lazy" />
+    <div>
+      <div class="idx">#03</div>
+      <div class="name">Smiling with Open Eyes</div>
+      <div class="file">03_smiling_open.png</div>
+    </div>
+  </div>
+<div class="card" data-name="beaming with eyes" onclick="copy('04_beaming_eyes.png')">
+    <img src="../tools/emoji_png_faces/04_beaming_eyes.png" alt="Beaming with Eyes" loading="lazy" />
+    <div>
+      <div class="idx">#04</div>
+      <div class="name">Beaming with Eyes</div>
+      <div class="file">04_beaming_eyes.png</div>
+    </div>
+  </div>
+<div class="card" data-name="grinning with sweat" onclick="copy('05_grinning_sweat.png')">
+    <img src="../tools/emoji_png_faces/05_grinning_sweat.png" alt="Grinning with Sweat" loading="lazy" />
+    <div>
+      <div class="idx">#05</div>
+      <div class="name">Grinning with Sweat</div>
+      <div class="file">05_grinning_sweat.png</div>
+    </div>
+  </div>
+<div class="card" data-name="grinning squinting" onclick="copy('06_grinning_squinting.png')">
+    <img src="../tools/emoji_png_faces/06_grinning_squinting.png" alt="Grinning Squinting" loading="lazy" />
+    <div>
+      <div class="idx">#06</div>
+      <div class="name">Grinning Squinting</div>
+      <div class="file">06_grinning_squinting.png</div>
+    </div>
+  </div>
+<div class="card" data-name="halo face" onclick="copy('07_halo.png')">
+    <img src="../tools/emoji_png_faces/07_halo.png" alt="Halo Face" loading="lazy" />
+    <div>
+      <div class="idx">#07</div>
+      <div class="name">Halo Face</div>
+      <div class="file">07_halo.png</div>
+    </div>
+  </div>
+<div class="card" data-name="winking face" onclick="copy('08_winking.png')">
+    <img src="../tools/emoji_png_faces/08_winking.png" alt="Winking Face" loading="lazy" />
+    <div>
+      <div class="idx">#08</div>
+      <div class="name">Winking Face</div>
+      <div class="file">08_winking.png</div>
+    </div>
+  </div>
+<div class="card" data-name="smiling with hearts" onclick="copy('09_smiling_hearts.png')">
+    <img src="../tools/emoji_png_faces/09_smiling_hearts.png" alt="Smiling with Hearts" loading="lazy" />
+    <div>
+      <div class="idx">#09</div>
+      <div class="name">Smiling with Hearts</div>
+      <div class="file">09_smiling_hearts.png</div>
+    </div>
+  </div>
+<div class="card" data-name="savoring food" onclick="copy('10_savoring.png')">
+    <img src="../tools/emoji_png_faces/10_savoring.png" alt="Savoring Food" loading="lazy" />
+    <div>
+      <div class="idx">#10</div>
+      <div class="name">Savoring Food</div>
+      <div class="file">10_savoring.png</div>
+    </div>
+  </div>
+<div class="card" data-name="relieved face" onclick="copy('11_relieved.png')">
+    <img src="../tools/emoji_png_faces/11_relieved.png" alt="Relieved Face" loading="lazy" />
+    <div>
+      <div class="idx">#11</div>
+      <div class="name">Relieved Face</div>
+      <div class="file">11_relieved.png</div>
+    </div>
+  </div>
+<div class="card" data-name="heart eyes" onclick="copy('12_heart_eyes.png')">
+    <img src="../tools/emoji_png_faces/12_heart_eyes.png" alt="Heart Eyes" loading="lazy" />
+    <div>
+      <div class="idx">#12</div>
+      <div class="name">Heart Eyes</div>
+      <div class="file">12_heart_eyes.png</div>
+    </div>
+  </div>
+<div class="card" data-name="cool face (sunglasses)" onclick="copy('13_cool_sunglasses.png')">
+    <img src="../tools/emoji_png_faces/13_cool_sunglasses.png" alt="Cool Face (Sunglasses)" loading="lazy" />
+    <div>
+      <div class="idx">#13</div>
+      <div class="name">Cool Face (Sunglasses)</div>
+      <div class="file">13_cool_sunglasses.png</div>
+    </div>
+  </div>
+<div class="card" data-name="smirking face" onclick="copy('14_smirking.png')">
+    <img src="../tools/emoji_png_faces/14_smirking.png" alt="Smirking Face" loading="lazy" />
+    <div>
+      <div class="idx">#14</div>
+      <div class="name">Smirking Face</div>
+      <div class="file">14_smirking.png</div>
+    </div>
+  </div>
+<div class="card" data-name="neutral face" onclick="copy('15_neutral.png')">
+    <img src="../tools/emoji_png_faces/15_neutral.png" alt="Neutral Face" loading="lazy" />
+    <div>
+      <div class="idx">#15</div>
+      <div class="name">Neutral Face</div>
+      <div class="file">15_neutral.png</div>
+    </div>
+  </div>
+<div class="card" data-name="expressionless" onclick="copy('16_expressionless.png')">
+    <img src="../tools/emoji_png_faces/16_expressionless.png" alt="Expressionless" loading="lazy" />
+    <div>
+      <div class="idx">#16</div>
+      <div class="name">Expressionless</div>
+      <div class="file">16_expressionless.png</div>
+    </div>
+  </div>
+<div class="card" data-name="unamused face" onclick="copy('17_unamused.png')">
+    <img src="../tools/emoji_png_faces/17_unamused.png" alt="Unamused Face" loading="lazy" />
+    <div>
+      <div class="idx">#17</div>
+      <div class="name">Unamused Face</div>
+      <div class="file">17_unamused.png</div>
+    </div>
+  </div>
+<div class="card" data-name="downcast with sweat" onclick="copy('18_downcast_sweat.png')">
+    <img src="../tools/emoji_png_faces/18_downcast_sweat.png" alt="Downcast with Sweat" loading="lazy" />
+    <div>
+      <div class="idx">#18</div>
+      <div class="name">Downcast with Sweat</div>
+      <div class="file">18_downcast_sweat.png</div>
+    </div>
+  </div>
+<div class="card" data-name="pensive face" onclick="copy('19_pensive.png')">
+    <img src="../tools/emoji_png_faces/19_pensive.png" alt="Pensive Face" loading="lazy" />
+    <div>
+      <div class="idx">#19</div>
+      <div class="name">Pensive Face</div>
+      <div class="file">19_pensive.png</div>
+    </div>
+  </div>
+<div class="card" data-name="kissing face" onclick="copy('20_kissing.png')">
+    <img src="../tools/emoji_png_faces/20_kissing.png" alt="Kissing Face" loading="lazy" />
+    <div>
+      <div class="idx">#20</div>
+      <div class="name">Kissing Face</div>
+      <div class="file">20_kissing.png</div>
+    </div>
+  </div>
+<div class="card" data-name="face blowing a kiss" onclick="copy('21_blowing_kiss.png')">
+    <img src="../tools/emoji_png_faces/21_blowing_kiss.png" alt="Face Blowing a Kiss" loading="lazy" />
+    <div>
+      <div class="idx">#21</div>
+      <div class="name">Face Blowing a Kiss</div>
+      <div class="file">21_blowing_kiss.png</div>
+    </div>
+  </div>
+<div class="card" data-name="kissing smiling eyes" onclick="copy('22_kissing_eyes.png')">
+    <img src="../tools/emoji_png_faces/22_kissing_eyes.png" alt="Kissing Smiling Eyes" loading="lazy" />
+    <div>
+      <div class="idx">#22</div>
+      <div class="name">Kissing Smiling Eyes</div>
+      <div class="file">22_kissing_eyes.png</div>
+    </div>
+  </div>
+<div class="card" data-name="kissing closed eyes" onclick="copy('23_kissing_closed.png')">
+    <img src="../tools/emoji_png_faces/23_kissing_closed.png" alt="Kissing Closed Eyes" loading="lazy" />
+    <div>
+      <div class="idx">#23</div>
+      <div class="name">Kissing Closed Eyes</div>
+      <div class="file">23_kissing_closed.png</div>
+    </div>
+  </div>
+<div class="card" data-name="face with tongue" onclick="copy('24_tongue.png')">
+    <img src="../tools/emoji_png_faces/24_tongue.png" alt="Face with Tongue" loading="lazy" />
+    <div>
+      <div class="idx">#24</div>
+      <div class="name">Face with Tongue</div>
+      <div class="file">24_tongue.png</div>
+    </div>
+  </div>
+<div class="card" data-name="squinting with tongue" onclick="copy('25_squinting_tongue.png')">
+    <img src="../tools/emoji_png_faces/25_squinting_tongue.png" alt="Squinting with Tongue" loading="lazy" />
+    <div>
+      <div class="idx">#25</div>
+      <div class="name">Squinting with Tongue</div>
+      <div class="file">25_squinting_tongue.png</div>
+    </div>
+  </div>
+<div class="card" data-name="disappointed face" onclick="copy('26_disappointed.png')">
+    <img src="../tools/emoji_png_faces/26_disappointed.png" alt="Disappointed Face" loading="lazy" />
+    <div>
+      <div class="idx">#26</div>
+      <div class="name">Disappointed Face</div>
+      <div class="file">26_disappointed.png</div>
+    </div>
+  </div>
+<div class="card" data-name="worried face" onclick="copy('27_worried.png')">
+    <img src="../tools/emoji_png_faces/27_worried.png" alt="Worried Face" loading="lazy" />
+    <div>
+      <div class="idx">#27</div>
+      <div class="name">Worried Face</div>
+      <div class="file">27_worried.png</div>
+    </div>
+  </div>
+<div class="card" data-name="angry face" onclick="copy('28_angry.png')">
+    <img src="../tools/emoji_png_faces/28_angry.png" alt="Angry Face" loading="lazy" />
+    <div>
+      <div class="idx">#28</div>
+      <div class="name">Angry Face</div>
+      <div class="file">28_angry.png</div>
+    </div>
+  </div>
+<div class="card" data-name="pouting face" onclick="copy('29_pouting.png')">
+    <img src="../tools/emoji_png_faces/29_pouting.png" alt="Pouting Face" loading="lazy" />
+    <div>
+      <div class="idx">#29</div>
+      <div class="name">Pouting Face</div>
+      <div class="file">29_pouting.png</div>
+    </div>
+  </div>
+<div class="card" data-name="crying face" onclick="copy('30_crying.png')">
+    <img src="../tools/emoji_png_faces/30_crying.png" alt="Crying Face" loading="lazy" />
+    <div>
+      <div class="idx">#30</div>
+      <div class="name">Crying Face</div>
+      <div class="file">30_crying.png</div>
+    </div>
+  </div>
+<div class="card" data-name="persevering face" onclick="copy('31_persevering.png')">
+    <img src="../tools/emoji_png_faces/31_persevering.png" alt="Persevering Face" loading="lazy" />
+    <div>
+      <div class="idx">#31</div>
+      <div class="name">Persevering Face</div>
+      <div class="file">31_persevering.png</div>
+    </div>
+  </div>
+<div class="card" data-name="tired face" onclick="copy('32_tired.png')">
+    <img src="../tools/emoji_png_faces/32_tired.png" alt="Tired Face" loading="lazy" />
+    <div>
+      <div class="idx">#32</div>
+      <div class="name">Tired Face</div>
+      <div class="file">32_tired.png</div>
+    </div>
+  </div>
+<div class="card" data-name="sleepy face" onclick="copy('33_sleepy.png')">
+    <img src="../tools/emoji_png_faces/33_sleepy.png" alt="Sleepy Face" loading="lazy" />
+    <div>
+      <div class="idx">#33</div>
+      <div class="name">Sleepy Face</div>
+      <div class="file">33_sleepy.png</div>
+    </div>
+  </div>
+<div class="card" data-name="weary face" onclick="copy('34_weary.png')">
+    <img src="../tools/emoji_png_faces/34_weary.png" alt="Weary Face" loading="lazy" />
+    <div>
+      <div class="idx">#34</div>
+      <div class="name">Weary Face</div>
+      <div class="file">34_weary.png</div>
+    </div>
+  </div>
+<div class="card" data-name="grimacing face" onclick="copy('35_grimacing.png')">
+    <img src="../tools/emoji_png_faces/35_grimacing.png" alt="Grimacing Face" loading="lazy" />
+    <div>
+      <div class="idx">#35</div>
+      <div class="name">Grimacing Face</div>
+      <div class="file">35_grimacing.png</div>
+    </div>
+  </div>
+<div class="card" data-name="loudly crying face" onclick="copy('36_loudly_crying.png')">
+    <img src="../tools/emoji_png_faces/36_loudly_crying.png" alt="Loudly Crying Face" loading="lazy" />
+    <div>
+      <div class="idx">#36</div>
+      <div class="name">Loudly Crying Face</div>
+      <div class="file">36_loudly_crying.png</div>
+    </div>
+  </div>
+<div class="card" data-name="surprised face" onclick="copy('37_surprised.png')">
+    <img src="../tools/emoji_png_faces/37_surprised.png" alt="Surprised Face" loading="lazy" />
+    <div>
+      <div class="idx">#37</div>
+      <div class="name">Surprised Face</div>
+      <div class="file">37_surprised.png</div>
+    </div>
+  </div>
+<div class="card" data-name="hushed face" onclick="copy('38_hushed.png')">
+    <img src="../tools/emoji_png_faces/38_hushed.png" alt="Hushed Face" loading="lazy" />
+    <div>
+      <div class="idx">#38</div>
+      <div class="name">Hushed Face</div>
+      <div class="file">38_hushed.png</div>
+    </div>
+  </div>
+<div class="card" data-name="screaming in fear" onclick="copy('39_screaming.png')">
+    <img src="../tools/emoji_png_faces/39_screaming.png" alt="Screaming in Fear" loading="lazy" />
+    <div>
+      <div class="idx">#39</div>
+      <div class="name">Screaming in Fear</div>
+      <div class="file">39_screaming.png</div>
+    </div>
+  </div>
+<div class="card" data-name="astonished face" onclick="copy('40_astonished.png')">
+    <img src="../tools/emoji_png_faces/40_astonished.png" alt="Astonished Face" loading="lazy" />
+    <div>
+      <div class="idx">#40</div>
+      <div class="name">Astonished Face</div>
+      <div class="file">40_astonished.png</div>
+    </div>
+  </div>
+<div class="card" data-name="flushed face" onclick="copy('41_flushed.png')">
+    <img src="../tools/emoji_png_faces/41_flushed.png" alt="Flushed Face" loading="lazy" />
+    <div>
+      <div class="idx">#41</div>
+      <div class="name">Flushed Face</div>
+      <div class="file">41_flushed.png</div>
+    </div>
+  </div>
+<div class="card" data-name="sleeping face" onclick="copy('42_sleeping.png')">
+    <img src="../tools/emoji_png_faces/42_sleeping.png" alt="Sleeping Face" loading="lazy" />
+    <div>
+      <div class="idx">#42</div>
+      <div class="name">Sleeping Face</div>
+      <div class="file">42_sleeping.png</div>
+    </div>
+  </div>
+<div class="card" data-name="dizzy face" onclick="copy('43_dizzy.png')">
+    <img src="../tools/emoji_png_faces/43_dizzy.png" alt="Dizzy Face" loading="lazy" />
+    <div>
+      <div class="idx">#43</div>
+      <div class="name">Dizzy Face</div>
+      <div class="file">43_dizzy.png</div>
+    </div>
+  </div>
+<div class="card" data-name="face without mouth" onclick="copy('44_face_without_mouth.png')">
+    <img src="../tools/emoji_png_faces/44_face_without_mouth.png" alt="Face Without Mouth" loading="lazy" />
+    <div>
+      <div class="idx">#44</div>
+      <div class="name">Face Without Mouth</div>
+      <div class="file">44_face_without_mouth.png</div>
+    </div>
+  </div>
+<div class="card" data-name="medical mask face" onclick="copy('45_medical_mask.png')">
+    <img src="../tools/emoji_png_faces/45_medical_mask.png" alt="Medical Mask Face" loading="lazy" />
+    <div>
+      <div class="idx">#45</div>
+      <div class="name">Medical Mask Face</div>
+      <div class="file">45_medical_mask.png</div>
+    </div>
+  </div>
+<div class="card" data-name="slightly smiling" onclick="copy('46_slightly_smiling.png')">
+    <img src="../tools/emoji_png_faces/46_slightly_smiling.png" alt="Slightly Smiling" loading="lazy" />
+    <div>
+      <div class="idx">#46</div>
+      <div class="name">Slightly Smiling</div>
+      <div class="file">46_slightly_smiling.png</div>
+    </div>
+  </div>
+<div class="card" data-name="upside-down face" onclick="copy('47_upside_down.png')">
+    <img src="../tools/emoji_png_faces/47_upside_down.png" alt="Upside-Down Face" loading="lazy" />
+    <div>
+      <div class="idx">#47</div>
+      <div class="name">Upside-Down Face</div>
+      <div class="file">47_upside_down.png</div>
+    </div>
+  </div>
+<div class="card" data-name="money-mouth face" onclick="copy('48_money_mouth.png')">
+    <img src="../tools/emoji_png_faces/48_money_mouth.png" alt="Money-Mouth Face" loading="lazy" />
+    <div>
+      <div class="idx">#48</div>
+      <div class="name">Money-Mouth Face</div>
+      <div class="file">48_money_mouth.png</div>
+    </div>
+  </div>
+<div class="card" data-name="thermometer face" onclick="copy('49_thermometer.png')">
+    <img src="../tools/emoji_png_faces/49_thermometer.png" alt="Thermometer Face" loading="lazy" />
+    <div>
+      <div class="idx">#49</div>
+      <div class="name">Thermometer Face</div>
+      <div class="file">49_thermometer.png</div>
+    </div>
+  </div>
+<div class="card" data-name="nerd face" onclick="copy('50_nerd.png')">
+    <img src="../tools/emoji_png_faces/50_nerd.png" alt="Nerd Face" loading="lazy" />
+    <div>
+      <div class="idx">#50</div>
+      <div class="name">Nerd Face</div>
+      <div class="file">50_nerd.png</div>
+    </div>
+  </div>
+<div class="card" data-name="head-bandage face" onclick="copy('51_head_bandage.png')">
+    <img src="../tools/emoji_png_faces/51_head_bandage.png" alt="Head-Bandage Face" loading="lazy" />
+    <div>
+      <div class="idx">#51</div>
+      <div class="name">Head-Bandage Face</div>
+      <div class="file">51_head_bandage.png</div>
+    </div>
+  </div>
+<div class="card" data-name="hugging face" onclick="copy('52_hugging.png')">
+    <img src="../tools/emoji_png_faces/52_hugging.png" alt="Hugging Face" loading="lazy" />
+    <div>
+      <div class="idx">#52</div>
+      <div class="name">Hugging Face</div>
+      <div class="file">52_hugging.png</div>
+    </div>
+  </div>
+<div class="card" data-name="clown face" onclick="copy('53_clown.png')">
+    <img src="../tools/emoji_png_faces/53_clown.png" alt="Clown Face" loading="lazy" />
+    <div>
+      <div class="idx">#53</div>
+      <div class="name">Clown Face</div>
+      <div class="file">53_clown.png</div>
+    </div>
+  </div>
+<div class="card" data-name="nauseated face" onclick="copy('54_nauseated.png')">
+    <img src="../tools/emoji_png_faces/54_nauseated.png" alt="Nauseated Face" loading="lazy" />
+    <div>
+      <div class="idx">#54</div>
+      <div class="name">Nauseated Face</div>
+      <div class="file">54_nauseated.png</div>
+    </div>
+  </div>
+<div class="card" data-name="rolling on floor laughing" onclick="copy('55_rofl.png')">
+    <img src="../tools/emoji_png_faces/55_rofl.png" alt="Rolling on Floor Laughing" loading="lazy" />
+    <div>
+      <div class="idx">#55</div>
+      <div class="name">Rolling on Floor Laughing</div>
+      <div class="file">55_rofl.png</div>
+    </div>
+  </div>
+<div class="card" data-name="drooling face" onclick="copy('56_drooling.png')">
+    <img src="../tools/emoji_png_faces/56_drooling.png" alt="Drooling Face" loading="lazy" />
+    <div>
+      <div class="idx">#56</div>
+      <div class="name">Drooling Face</div>
+      <div class="file">56_drooling.png</div>
+    </div>
+  </div>
+<div class="card" data-name="lying face" onclick="copy('57_lying.png')">
+    <img src="../tools/emoji_png_faces/57_lying.png" alt="Lying Face" loading="lazy" />
+    <div>
+      <div class="idx">#57</div>
+      <div class="name">Lying Face</div>
+      <div class="file">57_lying.png</div>
+    </div>
+  </div>
+<div class="card" data-name="sneezing face" onclick="copy('58_sneezing.png')">
+    <img src="../tools/emoji_png_faces/58_sneezing.png" alt="Sneezing Face" loading="lazy" />
+    <div>
+      <div class="idx">#58</div>
+      <div class="name">Sneezing Face</div>
+      <div class="file">58_sneezing.png</div>
+    </div>
+  </div>
+<div class="card" data-name="raised eyebrow face" onclick="copy('59_raised_eyebrow.png')">
+    <img src="../tools/emoji_png_faces/59_raised_eyebrow.png" alt="Raised Eyebrow Face" loading="lazy" />
+    <div>
+      <div class="idx">#59</div>
+      <div class="name">Raised Eyebrow Face</div>
+      <div class="file">59_raised_eyebrow.png</div>
+    </div>
+  </div>
+<div class="card" data-name="star-struck" onclick="copy('60_star_struck.png')">
+    <img src="../tools/emoji_png_faces/60_star_struck.png" alt="Star-Struck" loading="lazy" />
+    <div>
+      <div class="idx">#60</div>
+      <div class="name">Star-Struck</div>
+      <div class="file">60_star_struck.png</div>
+    </div>
+  </div>
+<div class="card" data-name="heart-eyes smiling" onclick="copy('61_heart_eyes_smiling.png')">
+    <img src="../tools/emoji_png_faces/61_heart_eyes_smiling.png" alt="Heart-Eyes Smiling" loading="lazy" />
+    <div>
+      <div class="idx">#61</div>
+      <div class="name">Heart-Eyes Smiling</div>
+      <div class="file">61_heart_eyes_smiling.png</div>
+    </div>
+  </div>
+<div class="card" data-name="smiling with tear" onclick="copy('62_smiling_tear.png')">
+    <img src="../tools/emoji_png_faces/62_smiling_tear.png" alt="Smiling with Tear" loading="lazy" />
+    <div>
+      <div class="idx">#62</div>
+      <div class="name">Smiling with Tear</div>
+      <div class="file">62_smiling_tear.png</div>
+    </div>
+  </div>
+<div class="card" data-name="woozy face" onclick="copy('63_woozy.png')">
+    <img src="../tools/emoji_png_faces/63_woozy.png" alt="Woozy Face" loading="lazy" />
+    <div>
+      <div class="idx">#63</div>
+      <div class="name">Woozy Face</div>
+      <div class="file">63_woozy.png</div>
+    </div>
+  </div>
+<div class="card" data-name="hot face" onclick="copy('64_hot.png')">
+    <img src="../tools/emoji_png_faces/64_hot.png" alt="Hot Face" loading="lazy" />
+    <div>
+      <div class="idx">#64</div>
+      <div class="name">Hot Face</div>
+      <div class="file">64_hot.png</div>
+    </div>
+  </div>
+<div class="card" data-name="cold face" onclick="copy('65_cold.png')">
+    <img src="../tools/emoji_png_faces/65_cold.png" alt="Cold Face" loading="lazy" />
+    <div>
+      <div class="idx">#65</div>
+      <div class="name">Cold Face</div>
+      <div class="file">65_cold.png</div>
+    </div>
+  </div>
+<div class="card" data-name="disguised face" onclick="copy('66_disguised.png')">
+    <img src="../tools/emoji_png_faces/66_disguised.png" alt="Disguised Face" loading="lazy" />
+    <div>
+      <div class="idx">#66</div>
+      <div class="name">Disguised Face</div>
+      <div class="file">66_disguised.png</div>
+    </div>
+  </div>
+<div class="card" data-name="shushing face" onclick="copy('67_shushing.png')">
+    <img src="../tools/emoji_png_faces/67_shushing.png" alt="Shushing Face" loading="lazy" />
+    <div>
+      <div class="idx">#67</div>
+      <div class="name">Shushing Face</div>
+      <div class="file">67_shushing.png</div>
+    </div>
+  </div>
+<div class="card" data-name="symbols on mouth" onclick="copy('68_symbols_on_mouth.png')">
+    <img src="../tools/emoji_png_faces/68_symbols_on_mouth.png" alt="Symbols on Mouth" loading="lazy" />
+    <div>
+      <div class="idx">#68</div>
+      <div class="name">Symbols on Mouth</div>
+      <div class="file">68_symbols_on_mouth.png</div>
+    </div>
+  </div>
+<div class="card" data-name="hand over mouth" onclick="copy('69_hand_over_mouth.png')">
+    <img src="../tools/emoji_png_faces/69_hand_over_mouth.png" alt="Hand Over Mouth" loading="lazy" />
+    <div>
+      <div class="idx">#69</div>
+      <div class="name">Hand Over Mouth</div>
+      <div class="file">69_hand_over_mouth.png</div>
+    </div>
+  </div>
+<div class="card" data-name="face vomiting" onclick="copy('70_vomiting.png')">
+    <img src="../tools/emoji_png_faces/70_vomiting.png" alt="Face Vomiting" loading="lazy" />
+    <div>
+      <div class="idx">#70</div>
+      <div class="name">Face Vomiting</div>
+      <div class="file">70_vomiting.png</div>
+    </div>
+  </div>
+<div class="card" data-name="exploding head" onclick="copy('71_exploding_head.png')">
+    <img src="../tools/emoji_png_faces/71_exploding_head.png" alt="Exploding Head" loading="lazy" />
+    <div>
+      <div class="idx">#71</div>
+      <div class="name">Exploding Head</div>
+      <div class="file">71_exploding_head.png</div>
+    </div>
+  </div>
+<div class="card" data-name="smiling cat" onclick="copy('72_.png')">
+    <img src="../tools/emoji_png_faces/72_.png" alt="Smiling Cat" loading="lazy" />
+    <div>
+      <div class="idx">#72</div>
+      <div class="name">Smiling Cat</div>
+      <div class="file">72_.png</div>
+    </div>
+  </div>
+<div class="card" data-name="cat with tears of joy" onclick="copy('73_.png')">
+    <img src="../tools/emoji_png_faces/73_.png" alt="Cat with Tears of Joy" loading="lazy" />
+    <div>
+      <div class="idx">#73</div>
+      <div class="name">Cat with Tears of Joy</div>
+      <div class="file">73_.png</div>
+    </div>
+  </div>
+<div class="card" data-name="smiling cat heart-eyes" onclick="copy('74_.png')">
+    <img src="../tools/emoji_png_faces/74_.png" alt="Smiling Cat Heart-Eyes" loading="lazy" />
+    <div>
+      <div class="idx">#74</div>
+      <div class="name">Smiling Cat Heart-Eyes</div>
+      <div class="file">74_.png</div>
+    </div>
+  </div>
+<div class="card" data-name="cat with wry smile" onclick="copy('75_.png')">
+    <img src="../tools/emoji_png_faces/75_.png" alt="Cat with Wry Smile" loading="lazy" />
+    <div>
+      <div class="idx">#75</div>
+      <div class="name">Cat with Wry Smile</div>
+      <div class="file">75_.png</div>
+    </div>
+  </div>
+<div class="card" data-name="kissing cat" onclick="copy('76_.png')">
+    <img src="../tools/emoji_png_faces/76_.png" alt="Kissing Cat" loading="lazy" />
+    <div>
+      <div class="idx">#76</div>
+      <div class="name">Kissing Cat</div>
+      <div class="file">76_.png</div>
+    </div>
+  </div>
+<div class="card" data-name="weary cat" onclick="copy('77_.png')">
+    <img src="../tools/emoji_png_faces/77_.png" alt="Weary Cat" loading="lazy" />
+    <div>
+      <div class="idx">#77</div>
+      <div class="name">Weary Cat</div>
+      <div class="file">77_.png</div>
+    </div>
+  </div>
+</div>
+<script>
+function filter() {
+  const q = document.getElementById('search').value.toLowerCase();
+  let n = 0;
+  document.querySelectorAll('.card').forEach(c => {
+    const show = c.dataset.name.includes(q) || c.innerHTML.includes(q);
+    c.style.display = show ? '' : 'none';
+    if (show) n++;
+  });
+  document.getElementById('stats').textContent = 'Showing ' + n + ' emojis';
+}
+function copy(text) {
+  navigator.clipboard.writeText(text);
+  document.title = 'Copied: ' + text;
+  setTimeout(() => document.title = 'Face Emojis (78)', 800);
+}
+</script>
+</body>
+</html>

@@ -46,6 +46,8 @@ choice Demo
         bool "A11_basic_sdio_sdmmc1"
     config A12_BASIC_SDIO_SDMMC1_FATFS
         bool "A12_basic_sdio_sdmmc1_fatfs"
+    config A13_BASIC_EMOJI_LCD
+        bool "A13_basic_emoji_lcd"
     config B1_E53_SC1_PLS
         bool "B1_e53_sc1_pls"
     config B2_E53_IA1_TEMP_HUMI_PLS
