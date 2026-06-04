@@ -3,3 +3,5 @@ build/
 
 # Config backup
 .config.old
+
+.claude/settings.local.json

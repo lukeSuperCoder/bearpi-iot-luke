@@ -33,6 +33,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
+#include "LCD.h"
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -49,7 +51,7 @@
 
 /* USER CODE END PM */
 
-/* Private variables ---------------------------------------------------------*/
+/* Private variables --------------------------------------------------------- */
 
 /* USER CODE BEGIN PV */
 //#define UART1
@@ -58,6 +60,15 @@
 uint8_t TdataIRQ[]={"Welcome to UART IRQ\r\n"};
 uint8_t TdataDMA[]={"Welcome to UART DMA\r\n"};
 uint8_t Rdata;
+
+#define MAX_LINE_LEN  28
+#define MAX_LINES     13
+#define RX_TIMEOUT_MS 50
+char rx_lines[MAX_LINES][MAX_LINE_LEN + 1];
+uint8_t cur_line = 0;
+uint8_t cur_pos = 0;
+volatile uint8_t flag_lcd_update = 0;
+volatile uint32_t last_rx_tick = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -119,17 +130,22 @@ int main(void)
   MX_DAC1_Init();
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
-	#ifdef UART1
+  LCD_Init();
+  LCD_Clear(BLACK);
+  POINT_COLOR = WHITE;
+  LCD_ShowString(5, 5, 240, 16, 16, "UART Echo Ready");
+  memset(rx_lines, 0, sizeof(rx_lines));
+#ifdef UART1
   printf("Welcome to UART1 test!\r\n");
-	#endif
-	#ifdef UART1_IRQ
-	HAL_UART_Receive_IT(&huart1,&Rdata,1);//触发中断接收
-	HAL_UART_Transmit_IT(&huart1,TdataIRQ,sizeof(TdataIRQ));//触发中断发送
-	#endif
-	#ifdef UART1_DMA
-	HAL_UART_Transmit(&huart1,TdataDMA,sizeof(TdataDMA),0xff);
-    HAL_UART_Receive_DMA(&huart1, &Rdata, 1);
-    #endif
+#endif
+#ifdef UART1_IRQ
+  HAL_UART_Receive_IT(&huart1, &Rdata, 1);
+  HAL_UART_Transmit_IT(&huart1, TdataIRQ, sizeof(TdataIRQ));
+#endif
+#ifdef UART1_DMA
+  HAL_UART_Transmit(&huart1, TdataDMA, sizeof(TdataDMA), 0xff);
+  HAL_UART_Receive_DMA(&huart1, &Rdata, 1);
+#endif
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -139,24 +155,39 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		#ifdef UART1		
-		//HAL_Delay(2000);
-		if(HAL_UART_Receive(&huart1, &Rdata, 1, 0)==HAL_OK)
-		{
-		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
-		HAL_UART_Transmit(&huart1, &Rdata, 1, 0);	
-		}
-		#endif
-		#ifdef UART1_IRQ
-		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
-	  printf("UART1_IRQ Test!\r\n");
-		HAL_Delay(2000);
-		#endif
-		#ifdef UART1_DMA
-		HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
-		printf("UART1_DMA Test!\r\n");
-		HAL_Delay(2000);
-		#endif
+#ifdef UART1
+    if(HAL_UART_Receive(&huart1, &Rdata, 1, 0)==HAL_OK)
+    {
+      HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
+      HAL_UART_Transmit(&huart1, &Rdata, 1, 0);
+    }
+#endif
+#ifdef UART1_IRQ
+    HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
+#endif
+#ifdef UART1_DMA
+    HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
+#endif
+
+    if (cur_pos > 0 && (HAL_GetTick() - last_rx_tick) > RX_TIMEOUT_MS) {
+      rx_lines[cur_line][cur_pos] = '\0';
+      cur_pos = 0;
+      cur_line++;
+      if (cur_line >= MAX_LINES) {
+        memmove(rx_lines[0], rx_lines[1], (MAX_LINES - 1) * (MAX_LINE_LEN + 1));
+        cur_line = MAX_LINES - 1;
+      }
+      rx_lines[cur_line][0] = '\0';
+      flag_lcd_update = 1;
+    }
+
+    if (flag_lcd_update) {
+      flag_lcd_update = 0;
+      LCD_Fill(5, 25, 235, 239, BLACK);
+      for (uint8_t i = 0; i <= cur_line && i < MAX_LINES; i++) {
+        LCD_ShowString(5, 25 + i * 16, 230, 16, 16, rx_lines[i]);
+      }
+    }
   }
   /* USER CODE END 3 */
 }
@@ -247,16 +278,48 @@ void PeriphCommonClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+static void rx_advance_line(void)
+{
+  rx_lines[cur_line][cur_pos] = '\0';
+  cur_pos = 0;
+  cur_line++;
+  if (cur_line >= MAX_LINES) {
+    memmove(rx_lines[0], rx_lines[1], (MAX_LINES - 1) * (MAX_LINE_LEN + 1));
+    cur_line = MAX_LINES - 1;
+  }
+  rx_lines[cur_line][0] = '\0';
+}
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	#ifdef UART1_IRQ
-  HAL_UART_Transmit(&huart1,&Rdata,1,0xff);
-  HAL_UART_Receive_IT(&huart1, &Rdata,1);
-	#endif
-	#ifdef UART1_DMA
-	HAL_UART_Transmit(&huart1, &Rdata,1,0xff);
-	HAL_UART_Receive_DMA(&huart1, &Rdata,1);
-	#endif
+#ifdef UART1_IRQ
+  HAL_UART_Transmit(&huart1, &Rdata, 1, 0xff);
+  if (Rdata >= 0x20 && cur_pos < MAX_LINE_LEN) {
+    rx_lines[cur_line][cur_pos++] = Rdata;
+    rx_lines[cur_line][cur_pos] = '\0';
+  } else if (cur_pos >= MAX_LINE_LEN) {
+    rx_advance_line();
+    rx_lines[cur_line][cur_pos++] = Rdata;
+    rx_lines[cur_line][cur_pos] = '\0';
+  }
+  last_rx_tick = HAL_GetTick();
+  flag_lcd_update = 1;
+  HAL_UART_Receive_IT(&huart1, &Rdata, 1);
+#endif
+#ifdef UART1_DMA
+  HAL_UART_Transmit(&huart1, &Rdata, 1, 0xff);
+  if (Rdata >= 0x20 && cur_pos < MAX_LINE_LEN) {
+    rx_lines[cur_line][cur_pos++] = Rdata;
+    rx_lines[cur_line][cur_pos] = '\0';
+  } else if (cur_pos >= MAX_LINE_LEN) {
+    rx_advance_line();
+    rx_lines[cur_line][cur_pos++] = Rdata;
+    rx_lines[cur_line][cur_pos] = '\0';
+  }
+  last_rx_tick = HAL_GetTick();
+  flag_lcd_update = 1;
+  HAL_UART_Receive_DMA(&huart1, &Rdata, 1);
+#endif
 }
 /* USER CODE END 4 */
 
@@ -280,13 +343,13 @@ void Error_Handler(void)
   * @brief  Reports the name of the source file and the source line number
   *         where the assert_param error has occurred.
   * @param  file: pointer to the source file name
-  * @param  line: assert_param error line source number
+  * @param  line: assert_param error line number
   * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
+  /* User can add his own implementation to report the file name and the line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
 }
