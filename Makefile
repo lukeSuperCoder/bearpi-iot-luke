@@ -284,4 +284,8 @@ OPENOCD_FLASH_START = 0x08000000
 download:
 	openocd -f $(CURDIR)/tools/openocd/$(OPENOCD_INTERFACE) -f $(CURDIR)/tools/openocd/$(OPENOCD_TARGET) -c init -c targets -c "reset halt" -c "flash write_image erase ./$(BUILD_DIR)/$(TARGET).bin 0x08000000" -c "verify_image ./$(BUILD_DIR)/$(TARGET).bin 0x08000000 bin" -c "reset run" -c shutdown
 
+# macOS (OpenOCD 0.12+) uses system configs with new syntax
+download_mac:
+	openocd -f interface/stlink-v2-1.cfg -f target/stm32l4x.cfg -c init -c targets -c "reset halt" -c "flash write_image erase ./$(BUILD_DIR)/$(TARGET).bin 0x08000000" -c "verify_image ./$(BUILD_DIR)/$(TARGET).bin 0x08000000 bin" -c "reset run" -c shutdown
+
 # *** EOF ***
