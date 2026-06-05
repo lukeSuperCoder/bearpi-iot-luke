@@ -48,6 +48,10 @@ choice Demo
         bool "A12_basic_sdio_sdmmc1_fatfs"
     config A13_BASIC_EMOJI_LCD
         bool "A13_basic_emoji_lcd"
+    config A14_BASIC_UART_EMOJI
+        bool "A14_basic_uart_emoji"
+    config A15_SD_EMOJI_SETUP
+        bool "A15_sd_emoji_setup"
     config B1_E53_SC1_PLS
         bool "B1_e53_sc1_pls"
     config B2_E53_IA1_TEMP_HUMI_PLS

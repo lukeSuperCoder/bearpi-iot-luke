@@ -58,6 +58,15 @@
 		user_demo_src  = applications/A13_basic_emoji_lcd/main.c applications/A13_basic_emoji_lcd/emoji_data.c
 	endif
 
+
+	ifeq ($(CONFIG_A14_BASIC_UART_EMOJI), y)
+		user_demo_src  = applications/A14_uart_emoji/main.c
+	endif
+
+ifeq ($(CONFIG_A15_SD_EMOJI_SETUP), y)
+		user_demo_src  = applications/A15_sd_emoji_setup/main.c
+	endif
+
 	ifeq ($(CONFIG_B1_E53_SC1_PLS), y)		
 		user_demo_src  = applications/B1_e53_sc1_pls/main.c 
 	endif
