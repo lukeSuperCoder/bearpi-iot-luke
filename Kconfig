@@ -64,6 +64,8 @@ choice Demo
         bool "B5_e53_st1_gps"
     config B6_E53_IS1_INFRARED
         bool "B6_e53_is1_infrared"
+    config C1_WIFI8266_BASIC
+        bool "C1_wifi8266_basic"
 endchoice
         
 endmenu
