@@ -90,4 +90,12 @@
 				user_demo_src  = applications/C1_wifi8266_basic/main.c
 			endif
 
+			ifeq ($(CONFIG_C2_WIFI_EMOJI), y)
+				user_demo_src  = applications/C2_wifi_emoji/main.c applications/C2_wifi_emoji/emoji_data.c
+			endif
+
+			ifeq ($(CONFIG_C3_WIFI_LLM_EMOJI), y)
+				user_demo_src  = applications/C3_wifi_llm_emoji/main.c applications/C3_wifi_llm_emoji/emoji_data.c
+			endif
+
 			C_SOURCES += $(user_demo_src)

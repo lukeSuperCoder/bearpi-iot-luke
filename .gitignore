@@ -5,3 +5,7 @@ build/
 .config.old
 
 .claude/settings.local.json
+
+# LLM emoji hook (contains API key + machine-specific board IP)
+tools/llm_hook/emoji_llm_config.json
+tools/llm_hook/emoji_llm_hook.log

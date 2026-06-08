@@ -66,6 +66,10 @@ choice Demo
         bool "B6_e53_is1_infrared"
     config C1_WIFI8266_BASIC
         bool "C1_wifi8266_basic"
+    config C2_WIFI_EMOJI
+        bool "C2_wifi_emoji"
+    config C3_WIFI_LLM_EMOJI
+        bool "C3_wifi_llm_emoji"
 endchoice
         
 endmenu

@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BearPi WiFi Emoji Controller</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #1a1a2e;
+    color: #eee;
+    min-height: 100vh;
+}
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    background: #16213e;
+    border-bottom: 1px solid #0f3460;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+header h1 { font-size: 20px; font-weight: 600; }
+.status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+}
+.dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: #e74c3c;
+    transition: background 0.3s;
+}
+.dot.connected { background: #2ecc71; }
+.dot.connecting { background: #f39c12; }
+.target {
+    font-size: 12px;
+    color: #888;
+    padding: 4px 10px;
+    background: #0d1117;
+    border-radius: 4px;
+}
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+    padding: 24px;
+    max-width: 720px;
+    margin: 0 auto;
+}
+.emoji-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 8px;
+    border-radius: 10px;
+    background: #16213e;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.emoji-card:hover { background: #1a2a4a; border-color: #0f3460; }
+.emoji-card.active { border-color: #e94560; background: #1a2a4a; }
+.emoji-card.disabled { opacity: 0.4; cursor: default; }
+.emoji-card img { width: 64px; height: 64px; image-rendering: pixelated; }
+.emoji-card span { font-size: 12px; color: #aaa; text-align: center; line-height: 1.3; }
+.log {
+    max-width: 720px;
+    margin: 0 auto 24px;
+    padding: 0 24px;
+}
+.log h3 { font-size: 14px; color: #888; margin-bottom: 8px; }
+.log-box {
+    background: #0d1117;
+    border-radius: 8px;
+    padding: 12px;
+    max-height: 180px;
+    overflow-y: auto;
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    line-height: 1.6;
+}
+.log-box .ok { color: #2ecc71; }
+.log-box .err { color: #e74c3c; }
+.log-box .info { color: #3498db; }
+.log-box .sys { color: #888; }
+</style>
+</head>
+<body>
+
+<header>
+    <h1>BearPi WiFi Emoji Controller</h1>
+    <div class="status">
+        <span class="target" id="target">not connected</span>
+        <div class="dot" id="dot"></div>
+        <span id="statusText">Disconnected</span>
+        <button id="reconnect">Reconnect</button>
+    </div>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<div class="log">
+    <h3>Log</h3>
+    <div class="log-box" id="logBox"></div>
+</div>
+
+<script>
+/* Same emoji list as the serial version -- preview thumbnails + display names. */
+const KNOWN_EMOJIS = [
+    { file: "emoji_png/00_grinning.png", name: "Grinning" },
+    { file: "emoji_png/01_tears_of_joy.png", name: "Tears of Joy" },
+    { file: "emoji_png/02_winking.png", name: "Winking" },
+    { file: "emoji_png/03_heart_eyes.png", name: "Heart Eyes" },
+    { file: "emoji_png/04_cool.png", name: "Cool" },
+    { file: "emoji_png/05_neutral.png", name: "Neutral" },
+    { file: "emoji_png/06_unamused.png", name: "Unamused" },
+    { file: "emoji_png/07_disappointed.png", name: "Disappointed" },
+    { file: "emoji_png/08_angry.png", name: "Angry" },
+    { file: "emoji_png/09_crying.png", name: "Crying" },
+    { file: "emoji_png/10_surprised.png", name: "Surprised" },
+    { file: "emoji_png/11_screaming.png", name: "Screaming" },
+    { file: "emoji_png/12_flushed.png", name: "Flushed" },
+    { file: "emoji_png/13_sleeping.png", name: "Sleeping" },
+    { file: "emoji_png/14_dizzy.png", name: "Dizzy" },
+    { file: "emoji_png/15_money_mouth.png", name: "Money Mouth" },
+    { file: "emoji_png/16_nerd.png", name: "Nerd" },
+    { file: "emoji_png/17_thinking.png", name: "Thinking" },
+    { file: "emoji_png/18_hugging.png", name: "Hugging" },
+    { file: "emoji_png/19_exploding_head.png", name: "Exploding Head" }
+];
+
+const EMOJI_COUNT = KNOWN_EMOJIS.length;
+let ws = null;
+let activeIdx = -1;
+let lastActiveAt = 0;
+
+const grid = document.getElementById("grid");
+const logBox = document.getElementById("logBox");
+const dot = document.getElementById("dot");
+const statusText = document.getElementById("statusText");
+const targetEl = document.getElementById("target");
+const reconnectBtn = document.getElementById("reconnect");
+
+function buildGrid() {
+    grid.innerHTML = "";
+    for (let i = 0; i < EMOJI_COUNT; i++) {
+        const card = document.createElement("div");
+        card.className = "emoji-card disabled";
+        card.dataset.index = i;
+        const known = KNOWN_EMOJIS[i];
+        card.innerHTML = `<img src="${known.file}" alt="${known.name}"><span>${i + 1}. ${known.name}</span>`;
+        card.addEventListener("click", () => sendEmoji(i));
+        grid.appendChild(card);
+    }
+}
+
+function setStatus(state, text) {
+    dot.className = "dot" + (state ? " " + state : "");
+    statusText.textContent = text;
+    const enabled = state === "connected";
+    document.querySelectorAll(".emoji-card").forEach(c => {
+        c.classList.toggle("disabled", !enabled);
+    });
+}
+
+function log(msg, cls) {
+    const line = document.createElement("div");
+    if (cls) line.className = cls;
+    line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+    logBox.appendChild(line);
+    logBox.scrollTop = logBox.scrollHeight;
+}
+
+function getWsPort() {
+    const params = new URLSearchParams(location.search);
+    if (params.get("wsport")) return parseInt(params.get("wsport"), 10);
+    /* Default: WS shares the HTTP port (Node server handles upgrade on same port) */
+    return parseInt(location.port || "8000", 10);
+}
+
+function connect() {
+    if (ws) {
+        try { ws.close(); } catch (_) {}
+        ws = null;
+    }
+    setStatus("connecting", "Connecting...");
+    targetEl.textContent = `ws://localhost:${getWsPort()}`;
+
+    const proto = location.protocol === "https:" ? "wss:" : "ws:";
+    const url = `${proto}//${location.hostname}:${getWsPort()}`;
+    log(`Connecting ${url}...`, "sys");
+
+    ws = new WebSocket(url);
+
+    ws.onopen = () => {
+        log("WebSocket connected (waiting for board TCP)", "info");
+    };
+
+    ws.onmessage = (ev) => {
+        const msg = ev.data;
+        if (msg === "TCP:connected") {
+            setStatus("connected", "Board connected");
+            log("Board TCP connected", "ok");
+        } else if (msg === "TCP:closed") {
+            setStatus("", "Board disconnected");
+            log("Board TCP closed", "err");
+        } else if (msg.startsWith("ERR:")) {
+            setStatus("", "Error");
+            log("Error: " + msg.slice(4), "err");
+        } else if (msg.startsWith("RECV:")) {
+            const text = msg.slice(5);
+            if (text.startsWith("OK")) {
+                log(`Board: ${text}`, "ok");
+            } else if (text.startsWith("ERR")) {
+                log(`Board: ${text}`, "err");
+            } else {
+                log(`Board: ${text}`, "info");
+            }
+        } else {
+            log(`Server: ${msg}`, "sys");
+        }
+    };
+
+    ws.onclose = () => {
+        setStatus("", "Disconnected");
+        log("WebSocket closed", "sys");
+        activeIdx = -1;
+        document.querySelectorAll(".emoji-card").forEach(c => c.classList.remove("active"));
+    };
+
+    ws.onerror = (e) => {
+        log("WebSocket error", "err");
+    };
+}
+
+async function sendEmoji(index) {
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+        log("Not connected", "err");
+        return;
+    }
+    const card = document.querySelector(`.emoji-card[data-index="${index}"]`);
+    if (!card || card.classList.contains("disabled")) return;
+
+    /* Debounce: same emoji clicked within 200ms is ignored */
+    const now = Date.now();
+    if (index === activeIdx && (now - lastActiveAt) < 200) return;
+    lastActiveAt = now;
+
+    document.querySelectorAll(".emoji-card").forEach(c => c.classList.remove("active"));
+    card.classList.add("active");
+    activeIdx = index;
+
+    const num = index + 1;
+    const name = KNOWN_EMOJIS[index].name;
+    try {
+        ws.send(String(num));
+        log(`Sent: ${num} (${name})`, "info");
+    } catch (e) {
+        log("Send failed: " + e.message, "err");
+    }
+}
+
+buildGrid();
+setStatus("", "Disconnected");
+log("Page loaded. Click Reconnect to start.", "sys");
+
+reconnectBtn.addEventListener("click", connect);
+
+/* Auto-connect after a short delay so user sees the page first */
+setTimeout(connect, 500);
+</script>
+</body>
+</html>
