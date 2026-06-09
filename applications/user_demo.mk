@@ -98,4 +98,8 @@
 				user_demo_src  = applications/C3_wifi_llm_emoji/main.c applications/C3_wifi_llm_emoji/emoji_data.c
 			endif
 
+			ifeq ($(CONFIG_C4_UART_LLM_EMOJI), y)
+				user_demo_src  = applications/C4_uart_llm_emoji/main.c applications/C4_uart_llm_emoji/emoji_data.c
+			endif
+
 			C_SOURCES += $(user_demo_src)

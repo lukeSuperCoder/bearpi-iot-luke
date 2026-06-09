@@ -1,0 +1,25 @@
+{
+  "_comment": "拷贝为 emoji_llm_config_serial.json (gitignored) 后填真实值。详见 docs/device-dev/llm-emoji-hook.md 的「串口版本」章节",
+  "glm": {
+    "api_key": "YOUR_ZHIPU_API_KEY_HERE",
+    "api_url": "https://open.bigmodel.cn/api/paas/v4/chat/completions",
+    "model": "glm-4-flash",
+    "temperature": 0.3,
+    "max_tokens": 50,
+    "request_timeout_ms": 8000
+  },
+  "board": {
+    "serial_port": "/dev/cu.usbmodem1203",
+    "baud_rate": 115200,
+    "line_terminator": "\n"
+  },
+  "prompt": {
+    "max_input_chars": 2000,
+    "fallback_emoji": 6,
+    "fallback_summary": "LLM call failed"
+  },
+  "logging": {
+    "enabled": false,
+    "file": "emoji_llm_hook_serial.log"
+  }
+}

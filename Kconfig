@@ -70,6 +70,8 @@ choice Demo
         bool "C2_wifi_emoji"
     config C3_WIFI_LLM_EMOJI
         bool "C3_wifi_llm_emoji"
+    config C4_UART_LLM_EMOJI
+        bool "C4_uart_llm_emoji"
 endchoice
         
 endmenu

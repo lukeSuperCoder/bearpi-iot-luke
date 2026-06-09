@@ -6,6 +6,8 @@ build/
 
 .claude/settings.local.json
 
-# LLM emoji hook (contains API key + machine-specific board IP)
+# LLM emoji hook (contains API key + machine-specific board IP / serial port)
 tools/llm_hook/emoji_llm_config.json
 tools/llm_hook/emoji_llm_hook.log
+tools/llm_hook/emoji_llm_config_serial.json
+tools/llm_hook/emoji_llm_hook_serial.log
