@@ -11,7 +11,12 @@
   "board": {
     "serial_port": "/dev/cu.usbmodem1203",
     "baud_rate": 115200,
-    "line_terminator": "\n"
+    "line_terminator": "\n",
+    "open_settle_delay_ms": 300,
+    "post_write_delay_ms": 500,
+    "ack_timeout_ms": 1200,
+    "max_attempts": 3,
+    "sync_newline": true
   },
   "prompt": {
     "max_input_chars": 2000,

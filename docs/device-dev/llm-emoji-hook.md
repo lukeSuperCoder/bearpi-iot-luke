@@ -188,9 +188,10 @@ C3 依赖 WiFi/TCP,在没有可用 2.4GHz AP 的环境下 (例如办公室只有
 Claude Code reply 完成
         │ Stop hook (.claude/settings.local.json)
         ▼
-python3 tools/llm_hook/emoji_llm_hook_serial.py   (stdin: JSON {last_assistant_message})
+python3 tools/llm_hook/emoji_llm_hook_serial.py   (stdin: Claude Stop hook JSON)
         │
         ├─ 读 tools/llm_hook/emoji_llm_config_serial.json
+        ├─ 从 last_assistant_message 或 transcript_path 提取最后一条 assistant 回复
         ├─ HTTPS POST → open.bigmodel.cn (system prompt 见 emoji_llm_prompt.txt)
         ├─ 解析返回的 "N|summary" (失败 → fallback #6 + "LLM call failed")
         └─ os.open(/dev/cu.usbmodem*) + termios raw + os.write(b"N|summary\n")
@@ -264,6 +265,10 @@ cp tools/llm_hook/emoji_llm_config_serial.example.json tools/llm_hook/emoji_llm_
 - `glm.api_key`: 填 ZhiPu API Key (可复用 `~/.claude/settings.json` 的 `ANTHROPIC_AUTH_TOKEN`)
 - `glm.model`: 默认 `glm-4-flash` (快且免费额度大;`glm-5.1` 在个人账户上一般不可用)
 - `board.serial_port`: 具体 `/dev/cu.usbmodemXXXX` 或 glob `/dev/cu.usbmodem*`
+- `board.open_settle_delay_ms`: 默认 300,打开 macOS CDC-ACM 串口后先等待设备稳定
+- `board.post_write_delay_ms`: 默认 500,避免 macOS CDC-ACM 在关闭串口时丢掉帧尾换行
+- `board.ack_timeout_ms` / `board.max_attempts`: 等待板端 `OK:` 回包并在缺失时重试,默认 `1200` / `3`
+- `board.sync_newline`: 默认 `true`,发送正式帧前先发一个换行,用于清掉板端残留半帧
 - `logging.enabled`: 调试时 `true`,稳定后 `false`
 
 #### 4. 注册 Claude Code Stop hook
@@ -297,12 +302,13 @@ cp tools/llm_hook/emoji_llm_config_serial.example.json tools/llm_hook/emoji_llm_
 
 ```bash
 python3 -c "
-import os, termios, tty
+import os, termios, tty, time
 fd = os.open('/dev/cu.usbmodem1203', os.O_RDWR | os.O_NOCTTY | os.O_NONBLOCK)
 attrs = termios.tcgetattr(fd); tty.setraw(fd); attrs = termios.tcgetattr(fd)
 attrs[4] = attrs[5] = 115200; termios.tcsetattr(fd, termios.TCSANOW, attrs)
 termios.tcflush(fd, termios.TCIOFLUSH)
 os.write(fd, b'5|Completed LCD optimization\n')
+termios.tcdrain(fd); time.sleep(0.5); os.close(fd)
 "
 ```
 
@@ -326,6 +332,8 @@ echo '{"last_assistant_message":"Build succeeded and tests pass!"}' | \
 
 3-8 秒内板子应更新为积极表情 (#1/#2/#5 居多) + 英文摘要 (例如 `Build OK, tests pass`)。
 
+真实 Claude Code Stop hook 通常传入的是 `transcript_path`,脚本会读取该 JSONL 文件并提取最后一条 assistant 消息；上面的 `last_assistant_message` 只是便于手工独立测试的兼容入口。
+
 #### Phase C: 端到端
 
 退出 Claude Code 重启。跟 Claude 说有情绪色彩的话,每次回复后 3-8 秒内板子 LCD 应更新。
@@ -335,6 +343,7 @@ echo '{"last_assistant_message":"Build succeeded and tests pass!"}' | \
 | 现象 | 排查 |
 |---|---|
 | 板子完全不变 | 串口路径错或被独占: `ls /dev/cu.usbmodem*`,关掉 `screen`/Arduino IDE/其它占用程序 |
+| 日志有 `OK emoji=...` 但 LCD 偶发不变 | 保持 `sync_newline=true`,确认日志没有 `Board ACK missing`;若仍偶发,把 `open_settle_delay_ms` 提到 500 或 `ack_timeout_ms` 提到 1500 |
 | 板子永远显示 #6 + "LLM call failed" | GLM 调用失败: 开 `logging.enabled`,查 `emoji_llm_hook_serial.log`,常见为 API key 无效或 model 名错 (`glm-5.1` 不可用 → 改 `glm-4-flash`)、`max_tokens` 太小 (应 ≥50) |
 | 表情变了但下方摘要为空 | GLM 没遵循 `N|summary` 格式,只输出了纯数字。hook 会兜底为空摘要。检查 prompt 是否更新,或临时增大 `temperature` |
 | 摘要被截断到 40 字符 | 设计如此 (LCD 显示空间有限)。如需更长,要同时改 hook `[:40]` 截断、prompt 字数限制、main.c 的 `SUMMARY_CHARS_PER_LINE` |
@@ -365,4 +374,3 @@ echo '{"last_assistant_message":"Build succeeded and tests pass!"}' | \
 | `tools/llm_hook/emoji_llm_config_serial.example.json` | 配置模板 (提交到 git) |
 | `tools/llm_hook/emoji_llm_config_serial.json` | 真实配置 (gitignored) |
 | `tools/llm_hook/emoji_llm_hook_serial.log` | 运行日志 (gitignored, 可选) |
-
